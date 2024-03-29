@@ -21,6 +21,23 @@ class RandomImage{
             console.log(e.name + ": " + e.message);
         }
     }
+    static async saveImage(image){
+        let b64 = new FileReader();
+        b64.readAsDataURL(image);
+        b64.onload = () => {
+            localStorage.setItem('randomImage-' + this.id,b64.result.toString());
+        }
+        this.id++;
+        if(!localStorage.getItem('rImageID') || localStorage.getItem('rImageID') === '0'){
+            localStorage.setItem('rImageID',(this.id).toString());
+        }
+        else if (parseInt(localStorage.getItem('rImageID')) < 29){
+            let refID = localStorage.getItem('rImageID').valueOf();
+            refID++;
+            localStorage.setItem('rImageID',refID.toString());
+        }
+        console.log(this.id + ',' + localStorage.getItem('rImageID'));
+    }
     static async getImage(category) {
         if(this.id >= 29 || parseInt(localStorage.getItem('rImageID')) >= 29){
             return this.loadImage();
@@ -35,21 +52,7 @@ class RandomImage{
         });
         if(response.ok){
             let image = await response.blob();
-            let b64 = new FileReader();
-            b64.readAsDataURL(image);
-            b64.onload = () => {
-                localStorage.setItem('randomImage-' + this.id,b64.result.toString());
-            }
-            this.id++;
-            if(localStorage.getItem('rImageID') === '0'){
-                localStorage.setItem('rImageID',(this.id).toString());
-            }
-            else if (parseInt(localStorage.getItem('rImageID')) < 29){
-                let refID = localStorage.getItem('rImageID').valueOf();
-                refID++;
-                localStorage.setItem('rImageID',refID.toString());
-            }
-            console.log(this.id + ',' + localStorage.getItem('rImageID'));
+            this.saveImage(image).then();
             return image;
         }
         else {
