@@ -1,7 +1,12 @@
+"use strict";
+
 const CAPITALS = (["Kabul","Mariehamn","Tirana","Algiers","Pago Pago","Andorra la Vella","Luanda","The Valley","Antarctica","St. John's","Buenos Aires","Yerevan","Oranjestad","Canberra","Vienna","Baku","Nassau","Manama","Dhaka","Bridgetown","Minsk","Brussels","Belmopan","Porto-Novo","Hamilton","Thimphu","Sucre","Kralendijk","Sarajevo","Gaborone","Brasilia","Diego Garcia","Bandar Seri Begawan","Sofia","Ouagadougou","Bujumbura","Phnom Penh","Yaounde","Ottawa","Praia","George Town","Bangui","N'Djamena","Santiago","Beijing","Flying Fish Cove","West Island","Bogota","Moroni","Brazzaville","Kinshasa","Avarua","San Jose","Yamoussoukro","Zagreb","Havana","Willemstad","Nicosia","Prague","Copenhagen","Djibouti","Roseau","Santo Domingo","Quito","Cairo","San Salvador","Malabo","Asmara","Tallinn","Addis Ababa","Stanley","Torshavn","Suva","Helsinki","Paris","Cayenne","Papeete","Port-aux-Francais","Libreville","Banjul","Tbilisi","Berlin","Accra","Gibraltar","Athens","Nuuk","St. George's","Basse-Terre","Hagatna","Guatemala City","St Peter Port","Conakry","Bissau","Georgetown","Port-au-Prince","","Vatican City","Tegucigalpa","Hong Kong","Budapest","Reykjavik","New Delhi","Jakarta","Tehran","Baghdad","Dublin","Douglas, Isle of Man","Jerusalem","Rome","Kingston","Tokyo","Saint Helier","Amman","Astana","Nairobi","Tarawa","Pyongyang","Seoul","Pristina","Kuwait City","Bishkek","Vientiane","Riga","Beirut","Maseru","Monrovia","Tripolis","Vaduz","Vilnius","Luxembourg","Macao","Skopje","Antananarivo","Lilongwe","Kuala Lumpur","Male","Bamako","Valletta","Majuro","Fort-de-France","Nouakchott","Port Louis","Mamoudzou","Mexico City","Palikir","Chisinau","Monaco","Ulan Bator","Podgorica","Plymouth","Rabat","Maputo","Nay Pyi Taw","Windhoek","Yaren","Kathmandu","Amsterdam","Willemstad","Noumea","Wellington","Managua","Niamey","Abuja","Alofi","Kingston","Saipan","Oslo","Muscat","Islamabad","Melekeok","East Jerusalem","Panama City","Port Moresby","Asuncion","Lima","Manila","Adamstown","Warsaw","Lisbon","San Juan","Doha","Saint-Denis","Bucharest","Moscow","Kigali","Gustavia","Jamestown","Basseterre","Castries","Marigot","Saint-Pierre","Kingstown","Apia","San Marino","Sao Tome","Riyadh","Dakar","Belgrade","Belgrade","Victoria","Freetown","Singapur","Philipsburg","Bratislava","Ljubljana","Honiara","Mogadishu","Pretoria","Grytviken","Juba","Madrid","Colombo","Khartoum","Paramaribo","Longyearbyen","Mbabane","Stockholm","Berne","Damascus","Taipei","Dushanbe","Dodoma","Bangkok","Dili","Lome","","Nuku'alofa","Port of Spain","Tunis","Ankara","Ashgabat","Cockburn Town","Funafuti","Kampala","Kiev","Abu Dhabi","London","Washington","","Montevideo","Tashkent","Port Vila","Caracas","Hanoi","Road Town","Charlotte Amalie","Mata Utu","El-Aaiun","Sanaa","Lusaka","Harare"]
     .filter(function (el) {
         return (el != null && el !== " ");
     }));
+class Cookie{
+    stat
+}
 class RandomImage{
     static id = 0;
     static async loadImage(){
@@ -29,12 +34,15 @@ class RandomImage{
         }
         this.id++;
         if(!localStorage.getItem('rImageID') || localStorage.getItem('rImageID') === '0'){
-            localStorage.setItem('rImageID',(this.id).toString());
+            localStorage.setItem('rImageID',String(this.id));
         }
         else if (parseInt(localStorage.getItem('rImageID')) < 29){
-            let refID = localStorage.getItem('rImageID').valueOf();
+            let refID = Number(localStorage.getItem('rImageID'));
             refID++;
-            localStorage.setItem('rImageID',refID.toString());
+            localStorage.setItem('rImageID',String(refID));
+        }
+        else if (isNaN(Number(localStorage.getItem('rImageID')))){
+            localStorage.setItem('rImageID','1');
         }
         console.log(this.id + ',' + localStorage.getItem('rImageID'));
     }
