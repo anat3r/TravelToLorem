@@ -42,11 +42,9 @@ class RandomImage{
             }
             this.id++;
             if(localStorage.getItem('rImageID') === '0'){
-                console.log('AAAA');
                 localStorage.setItem('rImageID',(this.id).toString());
             }
             else if (parseInt(localStorage.getItem('rImageID')) < 29){
-                console.log('BBBBB');
                 let refID = localStorage.getItem('rImageID').valueOf();
                 refID++;
                 localStorage.setItem('rImageID',refID.toString());
