@@ -10,7 +10,7 @@ class Cookie{
 class RandomImage{
     static id = 0;
     static async loadImage(){
-        let key = Math.floor(Math.random()*29);
+        let key = Math.floor(Math.random()*19);
         try{
             console.log('from data key: ' + key);
             let src = localStorage.getItem('randomImage-' + key);
@@ -36,7 +36,7 @@ class RandomImage{
         if(!localStorage.getItem('rImageID') || localStorage.getItem('rImageID') === '0'){
             localStorage.setItem('rImageID',String(this.id));
         }
-        else if (parseInt(localStorage.getItem('rImageID')) < 29){
+        else if (parseInt(localStorage.getItem('rImageID')) < 19){
             let refID = Number(localStorage.getItem('rImageID'));
             refID++;
             localStorage.setItem('rImageID',String(refID));
@@ -47,7 +47,7 @@ class RandomImage{
         console.log(this.id + ',' + localStorage.getItem('rImageID'));
     }
     static async getImage(category) {
-        if(this.id >= 29 || parseInt(localStorage.getItem('rImageID')) >= 29){
+        if(this.id >= 19 || parseInt(localStorage.getItem('rImageID')) >= 19){
             return this.loadImage();
         }
         let response = await fetch('https://api.api-ninjas.com/v1/randomimage?category=' + category, {
