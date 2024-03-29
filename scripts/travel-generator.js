@@ -41,9 +41,15 @@ class RandomImage{
                 localStorage.setItem('randomImage-' + this.id,b64.result.toString());
             }
             this.id++;
-            let refID = parseInt(localStorage.getItem('rImageID'));
-            if (!refID || parseInt(localStorage.getItem('rImageID')) < 29){
-                localStorage.setItem('rImageID',(refID++).toString());
+            if(localStorage.getItem('rImageID') === '0'){
+                console.log('AAAA');
+                localStorage.setItem('rImageID',(this.id).toString());
+            }
+            else if (parseInt(localStorage.getItem('rImageID')) < 29){
+                console.log('BBBBB');
+                let refID = localStorage.getItem('rImageID').valueOf();
+                refID++;
+                localStorage.setItem('rImageID',refID.toString());
             }
             console.log(this.id + ',' + localStorage.getItem('rImageID'));
             return image;
