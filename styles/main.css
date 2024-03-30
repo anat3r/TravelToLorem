@@ -31,12 +31,15 @@ body{
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    gap: 2em;
 }
+
 .main-container{
     display: flex;
     flex-direction: row;
     flex-basis: 90%;
-    padding: 0 15%;
+    gap: 1.5em;
+    padding: 0 min(10%,200px);
 
 }
 .logo-main{
@@ -55,7 +58,6 @@ body{
     background-color: var(--seasalt);
     flex-basis: 100vw;
     overflow: clip;
-    padding: 1em 0 0 5%;
 }
 .header-main{
     flex-basis: 40px;
@@ -68,7 +70,6 @@ body{
     color: var(--mint-cream);
     border: darkgray 1px solid;
     border-radius: 0.5rem;
-    margin: 1em;
     flex-basis: 300px;
     display: flex;
     flex-direction: column;

@@ -58,7 +58,7 @@ class ManualLocal{
 
     static async loadBlob(key){
         let src = localStorage.getItem(key);
-        return fetch(src).then(res => {
+        return await fetch(src).then(res => {
             if (res.ok) {
                 return res.blob();
             } else {
@@ -68,7 +68,7 @@ class ManualLocal{
     }
     static async saveBlob(id,blob){
         let b64 = new FileReader();
-        b64.readAsDataURL(blob);
+        await b64.readAsDataURL(blob);
         try{
             b64.onload = () => {
                 localStorage.setItem(id,b64.result.toString());
@@ -96,7 +96,6 @@ class RandomImage{
             if( step < 5) return await this.loadImage(++step);
             else {
                 localStorage.setItem('rImageID',String(0));
-                return await this.getImage();
             }
         }
     }
@@ -126,29 +125,24 @@ class RandomImage{
     }
     static async getImage(category = 'city') {
 
-        if(parseInt(localStorage.getItem('rImageID')) >= 19) return this.loadImage();
-        else if(this.id >= 19){
-            try{
-                return this.loadImage()
-            } catch (e) {
-                console.log(e.name + ":" + e.message);
-            }
-        }
-        let response = await fetch('https://api.api-ninjas.com/v1/randomimage?category=' + category, {
-            method: 'GET',
-            headers:{
-                'X-Api-Key': '+qTImCgrYKlcoKZSe1F8Zw==SHIDRIQGu8UwHPfx',
-                'Accept': 'image/jpg',
-            },
+        if(parseInt(localStorage.getItem('rImageID')) >= 19 || this.id >= 19) return await this.loadImage();
+        else{
+            let response = await fetch('https://api.api-ninjas.com/v1/randomimage?category=' + category, {
+                method: 'GET',
+                headers:{
+                    'X-Api-Key': '+qTImCgrYKlcoKZSe1F8Zw==SHIDRIQGu8UwHPfx',
+                    'Accept': 'image/jpg',
+                },
 
-        });
-        if(response.ok){
-            let image = await response.blob();
-            this.saveImage(image).then();
-            return image;
-        }
-        else {
-            console.log(response.status);
+            });
+            if(response.ok){
+                let image = await response.blob();
+                this.saveImage(image).then();
+                return image;
+            }
+            else {
+                console.log(response.status);
+            }
         }
     }
 
