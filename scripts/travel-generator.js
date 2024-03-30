@@ -109,7 +109,7 @@ class RandomImage{
                 localStorage.setItem('rImageID',String(1));
             }
             else if (parseInt(imageID) < 19 ){
-                let refID = Number(imageID);
+                let refID = parseInt(imageID);
                 refID++;
                 localStorage.setItem('rImageID',String(refID));
             }
