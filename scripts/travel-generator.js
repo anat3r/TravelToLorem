@@ -93,7 +93,7 @@ class RandomImage{
             return await ManualLocal.loadBlob(key);
         }catch (e) {
             console.log( e.name + ": " + e.message);
-            if( step <= 5) return await this.loadImage(step++);
+            if( step < 5) return await this.loadImage(step++);
             else {
                 localStorage.setItem('rImageID',String(0));
                 return await this.getImage();
