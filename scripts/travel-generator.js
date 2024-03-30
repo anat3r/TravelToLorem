@@ -259,6 +259,7 @@ class TravelLinks{
         this.travelCont.innerHTML = '';
         if(TravelTab.tabs && TravelTab.tabs[location]){
             this.travelCont.append(...TravelTab.tabs[location]);
+            TravelTab.tabs[location].at(0).scrollIntoView(true);
         }
     }
 }
