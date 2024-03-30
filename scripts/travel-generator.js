@@ -266,9 +266,9 @@ class TravelLinks{
 class DynamicTabs{
     constructor() {
         this.travelCont = document.querySelector('.travel-container');
-        this.min = Math.round(document.documentElement.clientHeight/150);
+        this.min = Math.round(document.documentElement.clientHeight/100);
         this.loaded = 0;
-        this.loadTabs(this.min*3,this.travelCont);
+        this.loadTabs(this.min*5,this.travelCont);
     }
     loadTabs(val = this.min,container = this.travelCont){
         this.loaded+=1;
