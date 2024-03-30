@@ -97,6 +97,7 @@ class RandomImage{
             else {
                 localStorage.setItem('rImageID',String(0));
                 return await this.getImage();
+
             }
         }
     }
