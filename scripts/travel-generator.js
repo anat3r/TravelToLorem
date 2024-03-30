@@ -87,7 +87,7 @@ console.log(CAPITALS);
 class RandomImage{
     static id = 0;
     static async loadImage(step = 0){
-        let key = 'randomImage' + (Math.floor(Math.random()*19));
+        let key = 'randomImage' + (Math.floor(Math.random()*18)+1);
         try {
             console.log('Get Image from key: ' + key);
             return await ManualLocal.loadBlob(key);
