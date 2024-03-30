@@ -266,7 +266,7 @@ class TravelLinks{
 class DynamicTabs{
     constructor() {
         this.travelCont = document.querySelector('.travel-container');
-        this.min = Math.round(document.documentElement.clientHeight/100);
+        this.min = Math.round(document.documentElement.clientHeight/150);
         this.loaded = 0;
         this.loadTabs(this.min*5,this.travelCont);
     }
@@ -277,7 +277,7 @@ class DynamicTabs{
         }
     }
     scrollToLoad(){
-        let scrolls = Math.floor(window.scrollY/document.documentElement.clientHeight + 0.3);
+        let scrolls = Math.floor(window.scrollY/document.documentElement.clientHeight+ 0.9);
         console.log(scrolls +  ',' + this.loaded);
         if(scrolls > this.loaded){
             this.loadTabs();
