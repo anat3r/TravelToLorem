@@ -1,54 +1,134 @@
 "use strict";
 
+/*class ManualCookie{
+    static getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        console.log(matches[1])
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+    static setCookie(name, value, days = 31, options = {}) {
+
+        options = {
+            path: '/',
+            // при необходимости добавьте другие значения по умолчанию
+            'max-age': days * 24 * 60 * 60,
+            ...options
+        };
+
+        if (options.expires instanceof Date) {
+            options.expires = options.expires.toUTCString();
+        }
+
+        let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+        for (let optionKey in options) {
+            updatedCookie += "; " + optionKey;
+            let optionValue = options[optionKey];
+            if (optionValue !== true) {
+                updatedCookie += "=" + optionValue;
+            }
+        }
+        console.log(updatedCookie);
+        document.cookie = updatedCookie;
+    }
+    static async loadBlob(key){
+        let src = this.getCookie(key);
+        return fetch(src).then(res => {
+            if (res.ok) {
+                return res.blob();
+            } else {
+                throw new Error("Can't get blob by address");
+            }
+        })
+    }
+    static async saveBlob(id,blob){
+        try{
+            let b64 = new FileReader();
+            b64.readAsDataURL(blob);
+            b64.onload = () => {
+                ManualCookie.setCookie(id,b64.result.toString());
+            }
+        } catch (e) {
+            console.log(e.name + ': ' + e.message);
+        }
+    }
+}*/
+class ManualLocal{
+
+    static async loadBlob(key){
+        let src = localStorage.getItem(key);
+        return fetch(src).then(res => {
+            if (res.ok) {
+                return res.blob();
+            } else {
+                throw new Error("Can't get blob by address");
+            }
+        })
+    }
+    static async saveBlob(id,blob){
+        let b64 = new FileReader();
+        b64.readAsDataURL(blob);
+        try{
+            b64.onload = () => {
+                localStorage.setItem(id,b64.result.toString());
+            }
+        } catch (e) {
+            console.log(e.name + ': ' + e.message);
+        }
+    }
+}
+
+
 const CAPITALS = (["Kabul","Mariehamn","Tirana","Algiers","Pago Pago","Andorra la Vella","Luanda","The Valley","Antarctica","St. John's","Buenos Aires","Yerevan","Oranjestad","Canberra","Vienna","Baku","Nassau","Manama","Dhaka","Bridgetown","Minsk","Brussels","Belmopan","Porto-Novo","Hamilton","Thimphu","Sucre","Kralendijk","Sarajevo","Gaborone","Brasilia","Diego Garcia","Bandar Seri Begawan","Sofia","Ouagadougou","Bujumbura","Phnom Penh","Yaounde","Ottawa","Praia","George Town","Bangui","N'Djamena","Santiago","Beijing","Flying Fish Cove","West Island","Bogota","Moroni","Brazzaville","Kinshasa","Avarua","San Jose","Yamoussoukro","Zagreb","Havana","Willemstad","Nicosia","Prague","Copenhagen","Djibouti","Roseau","Santo Domingo","Quito","Cairo","San Salvador","Malabo","Asmara","Tallinn","Addis Ababa","Stanley","Torshavn","Suva","Helsinki","Paris","Cayenne","Papeete","Port-aux-Francais","Libreville","Banjul","Tbilisi","Berlin","Accra","Gibraltar","Athens","Nuuk","St. George's","Basse-Terre","Hagatna","Guatemala City","St Peter Port","Conakry","Bissau","Georgetown","Port-au-Prince","","Vatican City","Tegucigalpa","Hong Kong","Budapest","Reykjavik","New Delhi","Jakarta","Tehran","Baghdad","Dublin","Douglas, Isle of Man","Jerusalem","Rome","Kingston","Tokyo","Saint Helier","Amman","Astana","Nairobi","Tarawa","Pyongyang","Seoul","Pristina","Kuwait City","Bishkek","Vientiane","Riga","Beirut","Maseru","Monrovia","Tripolis","Vaduz","Vilnius","Luxembourg","Macao","Skopje","Antananarivo","Lilongwe","Kuala Lumpur","Male","Bamako","Valletta","Majuro","Fort-de-France","Nouakchott","Port Louis","Mamoudzou","Mexico City","Palikir","Chisinau","Monaco","Ulan Bator","Podgorica","Plymouth","Rabat","Maputo","Nay Pyi Taw","Windhoek","Yaren","Kathmandu","Amsterdam","Willemstad","Noumea","Wellington","Managua","Niamey","Abuja","Alofi","Kingston","Saipan","Oslo","Muscat","Islamabad","Melekeok","East Jerusalem","Panama City","Port Moresby","Asuncion","Lima","Manila","Adamstown","Warsaw","Lisbon","San Juan","Doha","Saint-Denis","Bucharest","Moscow","Kigali","Gustavia","Jamestown","Basseterre","Castries","Marigot","Saint-Pierre","Kingstown","Apia","San Marino","Sao Tome","Riyadh","Dakar","Belgrade","Belgrade","Victoria","Freetown","Singapur","Philipsburg","Bratislava","Ljubljana","Honiara","Mogadishu","Pretoria","Grytviken","Juba","Madrid","Colombo","Khartoum","Paramaribo","Longyearbyen","Mbabane","Stockholm","Berne","Damascus","Taipei","Dushanbe","Dodoma","Bangkok","Dili","Lome","","Nuku'alofa","Port of Spain","Tunis","Ankara","Ashgabat","Cockburn Town","Funafuti","Kampala","Kiev","Abu Dhabi","London","Washington","","Montevideo","Tashkent","Port Vila","Caracas","Hanoi","Road Town","Charlotte Amalie","Mata Utu","El-Aaiun","Sanaa","Lusaka","Harare"]
     .filter((el) => (el != null && el !== " " && el !== ''))
     .sort((a,b) => a.localeCompare(b)));
 console.log(CAPITALS);
-class Cookie{
-    stat
-}
 class RandomImage{
     static id = 0;
-    static async loadImage(){
-        let key = Math.floor(Math.random()*19);
+    static async loadImage(step = 0){
+        let key = 'randomImage' + (Math.floor(Math.random()*19));
+        try {
+            console.log('Get Image from key: ' + key);
+            return await ManualLocal.loadBlob(key);
+        }catch (e) {
+            console.log( e.name + ": " + e.message);
+            if( step <= 5) return await this.loadImage(step++);
+        }
+    }
+    static async saveImage(image,){
+        let id = 'randomImage' + this.id;
         try{
-            console.log('from data key: ' + key);
-            let src = localStorage.getItem('randomImage-' + key);
-            return fetch(src).then(res => {
-                if(res.ok){
-                    return res.blob();
-                }
-                else{
-                    return this.loadImage()
-                }
-            });
+            await ManualLocal.saveBlob(id,image);
+            let imageID = localStorage?.getItem('rImageID');
+            if(!imageID ||imageID){
+                    localStorage.setItem('rImageID',String(1));
+            }
+            else if (parseInt(imageID) < 19 ){
+                let refID = Number(imageID);
+                refID++;
+                localStorage.setItem('rImageID',String(refID));
+            }
+            else if (isNaN(Number(imageID))){
+                localStorage.setItem('rImageID','0');
+            }
+            console.log('Local id:' + id + ', Saved id:' + imageID);
+            this.id++;
         }catch (e) {
             console.log(e.name + ": " + e.message);
+                await this.saveImage(false);
         }
-    }
-    static async saveImage(image){
-        let b64 = new FileReader();
-        b64.readAsDataURL(image);
-        b64.onload = () => {
-            localStorage.setItem('randomImage-' + this.id,b64.result.toString());
-        }
-        this.id++;
-        if(!localStorage.getItem('rImageID') || localStorage.getItem('rImageID') === '0'){
-            localStorage.setItem('rImageID',String(this.id));
-        }
-        else if (parseInt(localStorage.getItem('rImageID')) < 19){
-            let refID = Number(localStorage.getItem('rImageID'));
-            refID++;
-            localStorage.setItem('rImageID',String(refID));
-        }
-        else if (isNaN(Number(localStorage.getItem('rImageID')))){
-            localStorage.setItem('rImageID','1');
-        }
-        console.log(this.id + ',' + localStorage.getItem('rImageID'));
+
     }
     static async getImage(category) {
-        if(this.id >= 19 || parseInt(localStorage.getItem('rImageID')) >= 19){
-            return this.loadImage();
+
+        if(parseInt(localStorage.getItem('rImageID')) >= 19) return this.loadImage();
+        else if(this.id >= 19){
+            try{
+                return this.loadImage()
+            } catch (e) {
+                console.log(e.name + ":" + e.message);
+            }
         }
         let response = await fetch('https://api.api-ninjas.com/v1/randomimage?category=' + category, {
             method: 'GET',
@@ -208,7 +288,7 @@ class DynamicTabs{
 let tab = new DynamicTabs();
 let loadTabs = tab.scrollToLoad.bind(tab);
 window.addEventListener('scroll',loadTabs);
-let nav = new TravelLinks();
+new TravelLinks();
 
 
 
