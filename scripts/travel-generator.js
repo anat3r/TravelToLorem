@@ -100,12 +100,12 @@ class RandomImage{
             }
         }
     }
-    static async saveImage(image,){
-        let id = 'randomImage' + this.id;
+    static async saveImage(image){
+        let id = 'randomImage' + (this.id);
         try{
             await ManualLocal.saveBlob(id,image);
             let imageID = localStorage?.getItem('rImageID');
-            if(!imageID ||imageID){
+            if(!imageID || imageID === "0"){
                     localStorage.setItem('rImageID',String(1));
             }
             else if (parseInt(imageID) < 19 ){
