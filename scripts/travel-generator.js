@@ -94,6 +94,10 @@ class RandomImage{
         }catch (e) {
             console.log( e.name + ": " + e.message);
             if( step <= 5) return await this.loadImage(step++);
+            else {
+                localStorage.setItem('rImageID',String(0));
+                return await this.getImage();
+            }
         }
     }
     static async saveImage(image,){
@@ -120,7 +124,7 @@ class RandomImage{
         }
 
     }
-    static async getImage(category) {
+    static async getImage(category = 'city') {
 
         if(parseInt(localStorage.getItem('rImageID')) >= 19) return this.loadImage();
         else if(this.id >= 19){
