@@ -1,9 +1,9 @@
 "use strict";
 
 const CAPITALS = (["Kabul","Mariehamn","Tirana","Algiers","Pago Pago","Andorra la Vella","Luanda","The Valley","Antarctica","St. John's","Buenos Aires","Yerevan","Oranjestad","Canberra","Vienna","Baku","Nassau","Manama","Dhaka","Bridgetown","Minsk","Brussels","Belmopan","Porto-Novo","Hamilton","Thimphu","Sucre","Kralendijk","Sarajevo","Gaborone","Brasilia","Diego Garcia","Bandar Seri Begawan","Sofia","Ouagadougou","Bujumbura","Phnom Penh","Yaounde","Ottawa","Praia","George Town","Bangui","N'Djamena","Santiago","Beijing","Flying Fish Cove","West Island","Bogota","Moroni","Brazzaville","Kinshasa","Avarua","San Jose","Yamoussoukro","Zagreb","Havana","Willemstad","Nicosia","Prague","Copenhagen","Djibouti","Roseau","Santo Domingo","Quito","Cairo","San Salvador","Malabo","Asmara","Tallinn","Addis Ababa","Stanley","Torshavn","Suva","Helsinki","Paris","Cayenne","Papeete","Port-aux-Francais","Libreville","Banjul","Tbilisi","Berlin","Accra","Gibraltar","Athens","Nuuk","St. George's","Basse-Terre","Hagatna","Guatemala City","St Peter Port","Conakry","Bissau","Georgetown","Port-au-Prince","","Vatican City","Tegucigalpa","Hong Kong","Budapest","Reykjavik","New Delhi","Jakarta","Tehran","Baghdad","Dublin","Douglas, Isle of Man","Jerusalem","Rome","Kingston","Tokyo","Saint Helier","Amman","Astana","Nairobi","Tarawa","Pyongyang","Seoul","Pristina","Kuwait City","Bishkek","Vientiane","Riga","Beirut","Maseru","Monrovia","Tripolis","Vaduz","Vilnius","Luxembourg","Macao","Skopje","Antananarivo","Lilongwe","Kuala Lumpur","Male","Bamako","Valletta","Majuro","Fort-de-France","Nouakchott","Port Louis","Mamoudzou","Mexico City","Palikir","Chisinau","Monaco","Ulan Bator","Podgorica","Plymouth","Rabat","Maputo","Nay Pyi Taw","Windhoek","Yaren","Kathmandu","Amsterdam","Willemstad","Noumea","Wellington","Managua","Niamey","Abuja","Alofi","Kingston","Saipan","Oslo","Muscat","Islamabad","Melekeok","East Jerusalem","Panama City","Port Moresby","Asuncion","Lima","Manila","Adamstown","Warsaw","Lisbon","San Juan","Doha","Saint-Denis","Bucharest","Moscow","Kigali","Gustavia","Jamestown","Basseterre","Castries","Marigot","Saint-Pierre","Kingstown","Apia","San Marino","Sao Tome","Riyadh","Dakar","Belgrade","Belgrade","Victoria","Freetown","Singapur","Philipsburg","Bratislava","Ljubljana","Honiara","Mogadishu","Pretoria","Grytviken","Juba","Madrid","Colombo","Khartoum","Paramaribo","Longyearbyen","Mbabane","Stockholm","Berne","Damascus","Taipei","Dushanbe","Dodoma","Bangkok","Dili","Lome","","Nuku'alofa","Port of Spain","Tunis","Ankara","Ashgabat","Cockburn Town","Funafuti","Kampala","Kiev","Abu Dhabi","London","Washington","","Montevideo","Tashkent","Port Vila","Caracas","Hanoi","Road Town","Charlotte Amalie","Mata Utu","El-Aaiun","Sanaa","Lusaka","Harare"]
-    .filter(function (el) {
-        return (el != null && el !== " ");
-    }));
+    .filter((el) => (el != null && el !== " " && el !== ''))
+    .sort((a,b) => a.localeCompare(b)));
+console.log(CAPITALS);
 class Cookie{
     stat
 }
@@ -84,13 +84,17 @@ class TravelTab{
     static id = 0;
     static capitals = CAPITALS;
     static lorem = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet animi aperiam autem consequuntur fugiat harum ipsum laudantium minus modi nulla odio praesentium provident qui repellat, totam ut veniam voluptatum. Deserunt minus, optio perspiciatis similique suscipit temporibus. Accusantium, amet consequatur hic modi odit possimus quaerat vitae voluptas? Aut cum cupiditate eaque expedita impedit, in laborum praesentium, quibusdam, reprehenderit repudiandae suscipit voluptatem. Aperiam autem dolore doloremque et, harum provident ullam. Ad architecto asperiores, cumque debitis explicabo id iste libero, maiores molestiae natus officiis placeat quam quod sed soluta sunt tempora, tempore? Accusantium aperiam excepturi harum itaque magni molestiae quisquam voluptates? Amet, aspernatur.'.split(' ',100);
+    static tabs = {
+
+    }
+
     static getRCapital(){
         let id = Math.floor(Math.random()*this.capitals.length);
         let capital = this.capitals[id]
         return (capital.length > 1) ? capital : 'Gomel';
     }
     static getLorem(){
-        let len = Math.floor(Math.random()*5)+3;
+        let len = Math.floor(Math.random()*24)+6;
         let lorem = "This is";
         for(let i = 0; i < len; i++){
             let id = Math.floor(Math.random()*this.lorem.length);
@@ -107,12 +111,17 @@ class TravelTab{
         let tab = document.createElement('div');
 
         tab.classList.add('travel-tab');
-        tab.dataset.location = location.toLowerCase();
         this.id++;
         container.append(tab);
         this.addImage(tab);
         this.addMain(tab,location);
         this.addPrice(tab);
+        if(!this.tabs[location]){
+            this.tabs[location] = [tab];
+        }
+        else {
+            this.tabs[location].push(tab);
+        }
     }
     static addImage(tab){
         let imgCont = document.createElement("div");
@@ -127,7 +136,7 @@ class TravelTab{
     static addMain(tab,location){
         let tabMain = document.createElement('div');
         tabMain.classList.add('travel-main');
-        let header = `<h4 class="tab-header">${location}</h4>`;
+        let header = `<h4 class="tab-header"><a href="" class="tab-header" onclick="return false;" data-location="${location}">${location}</a></h4>`;
         let info = `<div class="tab-info">${this.getLorem()}</div>`
         tabMain.innerHTML = header + info;
         tab.append(tabMain);
@@ -135,12 +144,45 @@ class TravelTab{
     static addPrice(tab){
         let tabPrice = document.createElement('div');
         tabPrice.classList.add('travel-price');
-        tabPrice.innerHTML = `<h4>${(Math.random()*200).toFixed(2)}$</h4>`
+        let stars = Math.floor(Math.random()*4)+1;
+        tabPrice.innerHTML = `<h4>${(Math.random()*200).toFixed(2)}$</h4><span class="tab-stars">${ '&starf;'.repeat(stars) + '&star;'.repeat(5-stars)}</span>`
         tab.append(tabPrice);
     }
 }
 class TravelLinks{
-    static create
+    capitals = CAPITALS;
+    constructor() {
+        this.navLinks = document.querySelector('.ul-links');
+        this.travelCont = document.querySelector('.travel-container');
+        this.capitals.forEach((location) => this.addFilter(location));
+        console.log(JSON.stringify(TravelTab.tabs));
+        document.addEventListener('click',function (event) {
+            let link = event.target.closest('[data-location]');
+            if(!link) return;
+            event.preventDefault();
+            this.loadPages(link.dataset.location);
+        }.bind(this))
+    }
+    addFilter(location){
+        let filter = document.createElement('li');
+        let link = document.createElement('a');
+        link.href = "";
+        link.dataset.location = location;
+        link.innerHTML = location;
+        filter.append(link);
+        this.navLinks.append(filter);
+    }
+    loadPages(location){
+        try{
+            window.addEventListener('scroll',loadTabs);
+        }catch (e) {
+            console.log(e.name + ':' + e.message);
+        }
+        this.travelCont.innerHTML = '';
+        if(TravelTab.tabs && TravelTab.tabs[location]){
+            this.travelCont.append(...TravelTab.tabs[location]);
+        }
+    }
 }
 class DynamicTabs{
     constructor() {
@@ -152,7 +194,7 @@ class DynamicTabs{
     loadTabs(val = this.min,container = this.travelCont){
         this.loaded+=1;
         for(let i =0; i< val;i++){
-            TravelTab.createTab(container);
+            TravelTab.createTab(container)
         }
     }
     scrollToLoad(){
@@ -166,6 +208,7 @@ class DynamicTabs{
 let tab = new DynamicTabs();
 let loadTabs = tab.scrollToLoad.bind(tab);
 window.addEventListener('scroll',loadTabs);
+let nav = new TravelLinks();
 
 
 
